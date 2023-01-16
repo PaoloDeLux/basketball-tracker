@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, map, mergeMap, Observable, shareReplay, Subject, Subscription, tap } from 'rxjs';
+import { map, Observable, shareReplay, Subject, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
-import { TitleStrategy } from '@angular/router';
 import { GamesRequest } from '../models/games-request.interface';
 import { Game } from '../models/game.model';
 
@@ -61,7 +60,7 @@ export class TeamsService {
 
   public fetchTeamGames(teamId: number) : Observable<Game[]>  {
     let queryParams = new HttpParams();
-    // Last 12 days results
+    // Last 12 days results, not today
     for(let i = 1; i<13; i++){
       let d = new Date();
       d.setDate(d.getDate() - i);
