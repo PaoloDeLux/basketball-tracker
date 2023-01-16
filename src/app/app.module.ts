@@ -9,7 +9,7 @@ import { TrackerModule } from './tracker/tracker.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
