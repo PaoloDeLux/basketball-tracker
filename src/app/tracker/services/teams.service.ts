@@ -36,4 +36,12 @@ export class TeamsService {
     )
   }
 
+  public trackTeam(teamId: number) {
+
+  }
+
+  public fetchTrackedTeams() {
+
+  }
+
 }

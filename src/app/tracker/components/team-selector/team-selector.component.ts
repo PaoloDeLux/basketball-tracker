@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -11,13 +11,23 @@ import { TeamsService } from '../../services/teams.service';
 export class TeamSelectorComponent implements OnInit {
 
   public teams$: Observable<Team[]>;
+  public trackedTeams$: Observable<Team[]>;
+  public teamIdToTrack! : number;
 
   constructor(private teamsService: TeamsService){
     this.teams$ = new Observable();
+    this.trackedTeams$ = new Observable();
   }
 
   ngOnInit(): void {
-    this.teams$ = this.teamsService.getTeams();
+    this.teams$ = this.teamsService.getTeams().pipe(
+      // Default first team to track
+      tap((teams: Team[])=> { teams && teams.length>0? this.teamIdToTrack = teams[0].id : null })
+    );
+  }
+
+  public trackTeam(){
+    console.log(this.teamIdToTrack);
   }
 
 }

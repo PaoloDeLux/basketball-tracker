@@ -1,14 +1,20 @@
-<div class="container">
-  <div class="row">
-    <div class="col-sm">
-      <select class="form-select" aria-label="Default select example" id="teamInput" *ngIf="teams$ | async as data">
-        <ng-container >
-          <option *ngFor="let team of data" value="{{team.id}}">{{team.fullname}}</option>
-        </ng-container>
-      </select>
-    </div>
-    <div class="col-sm">
-      <button id="trackBtn" type="button" class="btn btn-primary">Track team</button>
+<form #myForm="ngForm">
+    <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <select class="form-select" aria-label="Default select example" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
+        [(ngModel)]="teamIdToTrack" name="team" >
+          <ng-container >
+            <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+          </ng-container>
+        </select>
+        <ng-template #spinner>
+          <app-spinner ></app-spinner>
+        </ng-template>
+      </div>
+      <div class="col-sm" >
+        <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary" (click)="trackTeam()">Track team</button>
+      </div>
     </div>
   </div>
-</div>
+</form>
