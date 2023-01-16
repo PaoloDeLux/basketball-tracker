@@ -1,0 +1,13 @@
+
+  <div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <div  *ngIf="trackedTeams$ | async as data">
+
+          <p *ngFor="let team of data;">{{team.fullname}}</p>
+
+      </div>
+    </div>
+  </div>
+</div>
+

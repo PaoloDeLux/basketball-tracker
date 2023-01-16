@@ -6,13 +6,17 @@ import { TrackerComponent } from './tracker.component';
 import { TeamSelectorComponent } from './components/team-selector/team-selector.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { FormsModule } from '@angular/forms';
+import { TrackedTeamsListComponent } from './components/tracked-teams-list/tracked-teams-list.component';
+import { TrackedTeamItemComponent } from './components/tracked-team-item/tracked-team-item.component';
 
 
 @NgModule({
   declarations: [
     TrackerComponent,
     TeamSelectorComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    TrackedTeamsListComponent,
+    TrackedTeamItemComponent
   ],
   imports: [
     CommonModule,

@@ -2,11 +2,9 @@
     <div class="container">
     <div class="row">
       <div class="col-sm">
-        <select class="form-select" aria-label="Default select example" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
+        <select class="form-select" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
         [(ngModel)]="teamIdToTrack" name="team" >
-          <ng-container >
             <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
-          </ng-container>
         </select>
         <ng-template #spinner>
           <app-spinner ></app-spinner>

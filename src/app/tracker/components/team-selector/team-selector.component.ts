@@ -11,12 +11,11 @@ import { TeamsService } from '../../services/teams.service';
 export class TeamSelectorComponent implements OnInit {
 
   public teams$: Observable<Team[]>;
-  public trackedTeams$: Observable<Team[]>;
+
   public teamIdToTrack! : number;
 
   constructor(private teamsService: TeamsService){
     this.teams$ = new Observable();
-    this.trackedTeams$ = new Observable();
   }
 
   ngOnInit(): void {
@@ -27,7 +26,8 @@ export class TeamSelectorComponent implements OnInit {
   }
 
   public trackTeam(){
-    console.log(this.teamIdToTrack);
+    debugger
+    this.teamsService.trackTeam(this.teamIdToTrack);
   }
 
 }
