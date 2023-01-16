@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TeamsService } from './tracker/services/teams.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'basketball-tracker';
+
+  constructor(public teamsService:TeamsService) {
+    teamsService.init();
+  }
+
 }
+
