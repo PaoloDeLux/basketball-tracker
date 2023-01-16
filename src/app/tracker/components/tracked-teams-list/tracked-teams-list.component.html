@@ -1,13 +1,5 @@
 <div class="row"  *ngIf="trackedTeams$ | async as data">
   <div *ngFor="let team of data;" class="col-5 card cardspace" >
-    <div class="card-header">
-      {{team.fullname}}
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Special title treatment</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-      <pre>{{ team.games | json }}</pre>
-    </div>
+    <app-tracked-team-item [team]="team" ></app-tracked-team-item>
   </div>
 </div>
