@@ -1,3 +1,11 @@
 .cardspace {
   margin: 20px;
 }
+
+.subtitle {
+  font-size: small;
+}
+
+.imgSize {
+  width: 15vw;
+}

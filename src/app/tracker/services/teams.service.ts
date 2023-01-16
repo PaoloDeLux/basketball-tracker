@@ -61,15 +61,15 @@ export class TeamsService {
 
   public fetchTeamGames(teamId: number) : Observable<Game[]>  {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("page",0);
-    queryParams = queryParams.append("per_page",12);
-    queryParams = queryParams.append("team_ids",teamId);
     // Last 12 days results
-    for(let i = 0; i<12; i++){
+    for(let i = 1; i<13; i++){
       let d = new Date();
       d.setDate(d.getDate() - i);
-      queryParams = queryParams.append("dates",d.toISOString().slice(0, 10));
+      queryParams = queryParams.append("dates[]",d.toISOString().slice(0, 10));
     }
+    queryParams = queryParams.append("page",0);
+    queryParams = queryParams.append("per_page",12);
+    queryParams = queryParams.append("team_ids[]",teamId);
     return this.http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
     .pipe(
       map((res :GamesRequest)=> {

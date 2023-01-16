@@ -1,0 +1,6 @@
+<div *ngIf="games && teamId">
+  <ng-container *ngFor="let game of games">
+  <div appWinnerLoserTeam [winner]="game.winnerTeamId===teamId">}</div>
+</ng-container>
+</div>
+

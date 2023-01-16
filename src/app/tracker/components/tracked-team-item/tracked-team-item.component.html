@@ -1,12 +1,20 @@
 <ng-container *ngIf="team">
   <div class="card-header" >
-    {{team.fullname}}
+    {{team.fullname}} [{{team.abbreviation}}]
+    <p class="subtitle">{{team.conference}} conference</p>
   </div>
   <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <img [src] = "team.imgUrl" style="width: 10vw;" />
-    <pre>{{ team.games | json }}</pre>
+    <div class="row">
+      <div class="col-6">
+        <p>Results of past 12 days</p>
+        <app-games-strip [games]="team.games" [teamId]="team.id"></app-games-strip>
+        <ng-container *ngIf="team.getGamedAvg as avg" >
+          <p>Avg pts scored: <strong>{{avg.score}}</strong></p>
+          <p>Avg pts conceded: <strong>{{avg.conceded}}</strong></p>
+        </ng-container>
+      </div>
+      <div class="col-6"><img *ngIf="team.imgUrl" [src]="team.imgUrl" class="imgSize" /></div>
+    </div>
   </div>
 </ng-container>
 
