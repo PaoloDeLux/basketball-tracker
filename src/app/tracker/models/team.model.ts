@@ -1,4 +1,8 @@
+import { Game } from "./game.model";
+
 export class Team {
+
+  public games: Array<Game>;
 
   constructor(
     public id: number,
@@ -9,5 +13,7 @@ export class Team {
     public name: string,
     public city: string
     )
-    { }
+    {
+      this.games = new Array<Game>();
+    }
 }

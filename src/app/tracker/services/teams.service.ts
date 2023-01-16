@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, forkJoin, map, mergeMap, Observable, shareReplay, Subject, Subscription, tap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
 import { TitleStrategy } from '@angular/router';
+import { GamesRequest } from '../models/games-request.interface';
+import { Game } from '../models/game.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +28,6 @@ export class TeamsService {
 
   public init() : void {
     this.fetchTeams();
-    this.fetchTrackedTeams();
   }
 
   public getTeams(){
@@ -49,31 +50,54 @@ export class TeamsService {
         let teams =  res.data.map((team)=> {
           return new Team(team.id, team.abbreviation, team.conference, team.division, team.full_name, team.name, team.city);
         });
-        this.teams = teams;
         return teams;
-      })
-      //shareReplay(1),
+      }),
+      tap((res)=> {
+        this.teams =res;
+      }),
+      shareReplay(1),
     )
   }
 
-  public trackTeam(teamId: number) : void {
-        let team = this.teams.find((team)=> team.id === +teamId);
-        if (team){
-          this.trackedTeams.push(team);
-          this.setTrackedTeams(this.trackedTeams);
-        }
+  public fetchTeamGames(teamId: number) : Observable<Game[]>  {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("page",0);
+    queryParams = queryParams.append("per_page",12);
+    queryParams = queryParams.append("team_ids",teamId);
+    // Last 12 days results
+    for(let i = 0; i<12; i++){
+      let d = new Date();
+      d.setDate(d.getDate() - i);
+      queryParams = queryParams.append("dates",d.toISOString().slice(0, 10));
+    }
+    return this.http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
+    .pipe(
+      map((res :GamesRequest)=> {
+        let games =  res.data.map((game)=> {
+          return new Game(game.id,game.date,game.home_team_score,game.visitor_team_score,game.season,game.home_team,game.visitor_team);
+        });
+        return games;
+      }),
+      shareReplay(1),
+    )
   }
 
-  public fetchTrackedTeams() :void  {
-    // this.teams$ = this.http.get<TeamsRequest>(this.URL + '/teams')
-    // .pipe(
-    //   map((res :TeamsRequest)=> {
-    //     return res.data.map((team)=> {
-    //       return new Team(team.id, team.abbreviation, team.conference, team.division, team.full_name, team.name, team.city);
-    //     });
-    //   }),
-      //shareReplay(1),
-    //)
+  public trackTeam(teamId: number) : Promise<void> {
+    return new Promise((resolve, reject) => {
+      let team = this.teams.find((team)=> team.id === +teamId);
+      if (team){
+        //Team Games
+        this.fetchTeamGames(teamId).subscribe((games)=>{
+          team!.games = games;
+          this.trackedTeams.push(team!);
+          this.setTrackedTeams(this.trackedTeams);
+          resolve();
+        })
+      } else {
+        reject('server side error!')
+      }
+    });
   }
+
 
 }
