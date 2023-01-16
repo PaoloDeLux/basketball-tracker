@@ -7,8 +7,8 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { FormsModule } from '@angular/forms';
 import { TrackedTeamsListComponent } from './components/tracked-teams-list/tracked-teams-list.component';
 import { TrackedTeamItemComponent } from './components/tracked-team-item/tracked-team-item.component';
-import { GamesStripComponent } from './components/results-strip/games-strip.component';
 import { WinnerLoserTeamDirective } from './directives/winner-loser-team.directive';
+import { GamesStripComponent } from './components/games-strip/games-strip.component';
 
 
 @NgModule({

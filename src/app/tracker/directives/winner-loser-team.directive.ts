@@ -1,13 +1,13 @@
-import { AfterViewInit, Directive, ElementRef, HostListener, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, HostListener, Input, Renderer2, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
   selector: '[appWinnerLoserTeam]'
 })
 
 export class WinnerLoserTeamDirective implements AfterViewInit {
-  
+
   @Input() winner: boolean | undefined;
-  
+
   constructor(private elRef: ElementRef) {
   }
   ngAfterViewInit(): void {
