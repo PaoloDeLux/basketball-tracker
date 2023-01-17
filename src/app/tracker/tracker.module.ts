@@ -9,6 +9,7 @@ import { TrackedTeamsListComponent } from './components/tracked-teams-list/track
 import { TrackedTeamItemComponent } from './components/tracked-team-item/tracked-team-item.component';
 import { WinnerLoserTeamDirective } from './directives/winner-loser-team.directive';
 import { GamesStripComponent } from './components/games-strip/games-strip.component';
+import { ResultsComponent } from './components/results/results.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { GamesStripComponent } from './components/games-strip/games-strip.compon
     TrackedTeamsListComponent,
     TrackedTeamItemComponent,
     GamesStripComponent,
-    WinnerLoserTeamDirective
+    WinnerLoserTeamDirective,
+    ResultsComponent
   ],
   imports: [
     CommonModule,

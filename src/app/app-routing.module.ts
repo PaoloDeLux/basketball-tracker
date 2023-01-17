@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [{ path: 'tracker', loadChildren: () => import('./tracker/tracker.module').then(m => m.TrackerModule) }];
+const routes: Routes = [{ path: '', loadChildren: () => import('./tracker/tracker.module').then(m => m.TrackerModule) }];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
