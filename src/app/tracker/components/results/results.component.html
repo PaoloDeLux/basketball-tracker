@@ -1,20 +1,17 @@
 <ng-container *ngIf="team$ | async as data">
-  <div class="card-header" >
-    {{data.fullname}} [{{data.abbreviation}}]
-    <p class="subtitle">{{data.conference}} conference</p>
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-6">
-        <p>Score of past 12 days</p>
-
-
-
-
-
-      </div>
-
+  <div class="col-5 card" >
+    <div class="card-header" >
+      {{data.fullname}} [{{data.abbreviation}}]
+      <p class="subtitle">{{data.conference}} conference</p>
     </div>
-    <a [routerLink]="['/']" class="btn btn-primary">< < Back to all team stats</a>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-6">
+          <p>Scores of past 12 days:</p>
+          <app-result-item [game]="game" *ngFor="let game of data.games"></app-result-item>
+        </div>
+      </div>
+      <a id="backBtn" [routerLink]="['/']" class="btn btn-primary">< < Back to all team stats</a>
+    </div>
   </div>
 </ng-container>
