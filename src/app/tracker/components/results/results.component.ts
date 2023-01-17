@@ -15,7 +15,6 @@ export class ResultsComponent implements OnInit {
   public teamCode$: Observable<String|undefined>;
 
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private teamsService: TeamsService
   ) {
@@ -27,7 +26,7 @@ export class ResultsComponent implements OnInit {
     this.team$ = this.route.params.pipe(
       map((params) => params['teamCode']),
       mergeMap((teamCode)=> {
-        return this.teamsService.getTeams().pipe(
+        return this.teamsService.getTrackedTeams().pipe(
           take(1),
           map((teams)=> {
             return teams.find((t)=> { return t.id === +teamCode!})

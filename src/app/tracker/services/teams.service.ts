@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable, shareReplay, Subject, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, shareReplay, Subject, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -13,15 +13,15 @@ export class TeamsService {
 
   private teams$: Observable<Team[]>;
   private teams: Array<Team>;
-  private trackedTeams$: Subject<Team[]>;
+  private trackedTeams$: BehaviorSubject<Team[]>;
   private trackedTeams: Array<Team>;
 
   private URL = 'https://free-nba.p.rapidapi.com';
 
   constructor(private http: HttpClient) {
     this.teams$ = new Observable();
-    this.trackedTeams$ = new Subject();
     this.trackedTeams = new Array<Team>();
+    this.trackedTeams$ = new BehaviorSubject(this.trackedTeams);
     this.teams = new Array<Team>();
   }
 
