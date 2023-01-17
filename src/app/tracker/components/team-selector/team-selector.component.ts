@@ -11,7 +11,6 @@ import { TeamsService } from '../../services/teams.service';
 export class TeamSelectorComponent implements OnInit {
 
   public teams$: Observable<Team[]>;
-  private error: string | null = null;
   public teamIdToTrack! : number;
 
   constructor(private teamsService: TeamsService){
@@ -31,7 +30,7 @@ export class TeamSelectorComponent implements OnInit {
       // Successfully added
     })
     .catch((err) => {
-      this.error = err
+      alert(err);
     });
   }
 

@@ -20,7 +20,13 @@ export class TrackedTeamsListComponent {
   }
 
   public untrackTeam(teamId: number){
-    this.teamsService.untrackTeam(teamId);
+    this.teamsService.untrackTeam(teamId)
+    .then(() => {
+      // Successfully added
+    })
+    .catch((err) => {
+      alert(err);
+    });
   }
 
 }

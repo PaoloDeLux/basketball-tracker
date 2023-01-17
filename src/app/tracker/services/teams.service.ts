@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, shareReplay, Subject, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, retry, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -53,8 +53,7 @@ export class TeamsService {
       }),
       tap((res)=> {
         this.teams =res;
-      }),
-      shareReplay(1),
+      })
     )
   }
 
@@ -76,8 +75,7 @@ export class TeamsService {
           return new Game(game.id,game.date,game.home_team_score,game.visitor_team_score,game.season,game.home_team,game.visitor_team);
         });
         return games;
-      }),
-      shareReplay(1),
+      })
     )
   }
 
@@ -86,18 +84,21 @@ export class TeamsService {
       let team = this.teams.find((team)=> team.id === +teamId);
       if (team){
         //Team Games
-        this.fetchTeamGames(teamId).subscribe((games)=>{
-          team!.games = games;
-          // Check team is tracked
-          if(!this.trackedTeams.find((t)=> t.id===+teamId)){
-            this.trackedTeams.push(team!);
-            this.setTrackedTeams(this.trackedTeams);
-            resolve();
-          }
-          else {
-            reject('The team is already present!');
-          }
-        })
+        this.fetchTeamGames(teamId).subscribe({
+          next: (games) => {
+            team!.games = games;
+            // Check team is already tracked
+            if(!this.trackedTeams.find((t)=> t.id===+teamId)){
+              this.trackedTeams.push(team!);
+              this.setTrackedTeams(this.trackedTeams);
+              resolve();
+            }
+            else {
+              reject('The team is already tracked!');
+            }
+          },
+          error: () => reject('Server side error!')
+        });
       } else {
         reject('Server side error!');
       }
@@ -112,7 +113,7 @@ export class TeamsService {
         this.setTrackedTeams(this.trackedTeams);
         resolve();
       } else {
-        reject('client side error!')
+        reject('The team is no longer tracked!')
       }
     });
   }
