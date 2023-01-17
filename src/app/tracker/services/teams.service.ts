@@ -88,12 +88,18 @@ export class TeamsService {
         //Team Games
         this.fetchTeamGames(teamId).subscribe((games)=>{
           team!.games = games;
-          this.trackedTeams.push(team!);
-          this.setTrackedTeams(this.trackedTeams);
-          resolve();
+          // Check team is tracked
+          if(!this.trackedTeams.find((t)=> t.id===+teamId)){
+            this.trackedTeams.push(team!);
+            this.setTrackedTeams(this.trackedTeams);
+            resolve();
+          }
+          else {
+            reject('The team is already present!');
+          }
         })
       } else {
-        reject('server side error!')
+        reject('Server side error!');
       }
     });
   }
