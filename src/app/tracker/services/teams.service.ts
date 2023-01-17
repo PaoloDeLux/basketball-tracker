@@ -98,5 +98,18 @@ export class TeamsService {
     });
   }
 
+  public untrackTeam(teamId: number) : Promise<void> {
+    return new Promise((resolve, reject) => {
+      let teamIndex = this.trackedTeams.findIndex((team)=> team.id === +teamId);
+      if (teamIndex !== undefined){
+        this.trackedTeams.splice(teamIndex,1);
+        this.setTrackedTeams(this.trackedTeams);
+        resolve();
+      } else {
+        reject('client side error!')
+      }
+    });
+  }
+
 
 }

@@ -19,4 +19,8 @@ export class TrackedTeamsListComponent {
     this.trackedTeams$ = this.teamsService.getTrackedTeams();
   }
 
+  public untrackTeam(teamId: number){
+    this.teamsService.untrackTeam(teamId);
+  }
+
 }

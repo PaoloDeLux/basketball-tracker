@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Team } from '../../models/team.model';
 
 @Component({
@@ -7,12 +7,13 @@ import { Team } from '../../models/team.model';
   styleUrls: ['./tracked-team-item.component.css']
 })
 
-export class TrackedTeamItemComponent implements OnInit {
+export class TrackedTeamItemComponent  {
 
-  @Input() team: Team | undefined;
+    @Input() team: Team | undefined;
+    @Output() teamIdUntrack = new EventEmitter<number>();
 
-    ngOnInit(): void {
-
+    onUntrack(teamId: number){
+      this.teamIdUntrack.emit(+teamId);
     }
 
 }

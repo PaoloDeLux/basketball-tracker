@@ -9,3 +9,7 @@
 .imgSize {
   width: 15vw;
 }
+
+.close {
+  cursor: pointer;
+}
