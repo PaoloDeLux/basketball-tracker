@@ -11,16 +11,16 @@ import { TeamsService } from '../../services/teams.service';
 export class TrackedTeamsListComponent {
   public trackedTeams$: Observable<Team[]>;
 
-  constructor(private teamsService: TeamsService){
+  constructor(private _teamsService: TeamsService){
     this.trackedTeams$ = new Observable();
   }
 
   ngOnInit(): void {
-    this.trackedTeams$ = this.teamsService.getTrackedTeams();
+    this.trackedTeams$ = this._teamsService.getTrackedTeams();
   }
 
   public untrackTeam(teamId: number){
-    this.teamsService.untrackTeam(teamId)
+    this._teamsService.untrackTeam(teamId)
     .then(() => {
       // Successfully added
     })

@@ -4,7 +4,12 @@
       <div class="col-sm">
         <select class="form-select" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
         [(ngModel)]="teamIdToTrack" name="team" >
-            <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+            <ng-container *ngIf="data.length===0; else options">
+              <option>No team available</option>
+            </ng-container>
+            <ng-template #options>
+              <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+            </ng-template>
         </select>
         <ng-template #spinner>
           <app-spinner ></app-spinner>

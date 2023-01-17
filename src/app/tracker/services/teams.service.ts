@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, retry, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -11,18 +11,18 @@ import { Game } from '../models/game.model';
 })
 export class TeamsService {
 
-  private teams$: Observable<Team[]>;
-  private teams: Array<Team>;
-  private trackedTeams$: BehaviorSubject<Team[]>;
-  private trackedTeams: Array<Team>;
+  private _teams$: Observable<Team[]>;
+  private _teams: Array<Team>;
+  private _trackedTeams$: BehaviorSubject<Team[]>;
+  private _trackedTeams: Array<Team>;
 
   private URL = 'https://free-nba.p.rapidapi.com';
 
   constructor(private http: HttpClient) {
-    this.teams$ = new Observable();
-    this.trackedTeams = new Array<Team>();
-    this.trackedTeams$ = new BehaviorSubject(this.trackedTeams);
-    this.teams = new Array<Team>();
+    this._teams$ = new Observable();
+    this._trackedTeams = new Array<Team>();
+    this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
+    this._teams = new Array<Team>();
   }
 
   public init() : void {
@@ -30,29 +30,29 @@ export class TeamsService {
   }
 
   public getTeams(){
-    return this.teams$;
+    return this._teams$;
   }
 
   public getTrackedTeams(){
-    return this.trackedTeams$;
+    return this._trackedTeams$;
   }
 
   private setTrackedTeams(trackedTeams : Team[]){
-    this.trackedTeams$.next(trackedTeams);
+    this._trackedTeams$.next(trackedTeams);
   }
 
 
   public fetchTeams() :void  {
-    this.teams$ = this.http.get<TeamsRequest>(this.URL + '/teams')
+    this._teams$ = this.http.get<TeamsRequest>(this.URL + '/teams')
     .pipe(
       map((res :TeamsRequest)=> {
-        let teams =  res.data.map((team)=> {
+        const teams =  res.data.map((team)=> {
           return new Team(team.id, team.abbreviation, team.conference, team.division, team.full_name, team.name, team.city);
         });
         return teams;
       }),
       tap((res)=> {
-        this.teams =res;
+        this._teams =res;
       })
     )
   }
@@ -71,7 +71,7 @@ export class TeamsService {
     return this.http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
     .pipe(
       map((res :GamesRequest)=> {
-        let games =  res.data.map((game)=> {
+        const games =  res.data.map((game)=> {
           return new Game(game.id,game.date,game.home_team_score,game.visitor_team_score,game.season,game.home_team,game.visitor_team);
         });
         return games;
@@ -81,16 +81,16 @@ export class TeamsService {
 
   public trackTeam(teamId: number) : Promise<void> {
     return new Promise((resolve, reject) => {
-      let team = this.teams.find((team)=> team.id === +teamId);
+      const team = this._teams.find((team)=> team.id === +teamId);
       if (team){
         //Team Games
         this.fetchTeamGames(teamId).subscribe({
           next: (games) => {
             team!.games = games;
             // Check team is already tracked
-            if(!this.trackedTeams.find((t)=> t.id===+teamId)){
-              this.trackedTeams.push(team!);
-              this.setTrackedTeams(this.trackedTeams);
+            if(!this._trackedTeams.find((t)=> t.id===+teamId)){
+              this._trackedTeams.push(team!);
+              this.setTrackedTeams(this._trackedTeams);
               resolve();
             }
             else {
@@ -107,10 +107,10 @@ export class TeamsService {
 
   public untrackTeam(teamId: number) : Promise<void> {
     return new Promise((resolve, reject) => {
-      let teamIndex = this.trackedTeams.findIndex((team)=> team.id === +teamId);
+      const teamIndex = this._trackedTeams.findIndex((team)=> team.id === +teamId);
       if (teamIndex !== undefined){
-        this.trackedTeams.splice(teamIndex,1);
-        this.setTrackedTeams(this.trackedTeams);
+        this._trackedTeams.splice(teamIndex,1);
+        this.setTrackedTeams(this._trackedTeams);
         resolve();
       } else {
         reject('The team is no longer tracked!')

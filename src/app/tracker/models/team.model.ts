@@ -1,3 +1,4 @@
+import { Avg } from "./avg.interface";
 import { Game } from "./game.model";
 
 export class Team {
@@ -21,8 +22,8 @@ export class Team {
       }
     }
 
-    get  getGamedAvg() : {score: number, conceded: number }{
-      let avgResult = { score: 0, conceded: 0};
+    get  getGamedAvg() : Avg {
+      const avgResult = { score: 0, conceded: 0};
       if(this.games && this.games.length>0){
         const teamHomeGames = this.games.filter((t)=> t.homeTeam.id === this.id );
         const teamVisitorGames = this.games.filter((t)=>  t.visitorTeam.id === this.id );
