@@ -1,4 +1,4 @@
-<div class="row"  *ngIf="trackedTeams$ | async as data">
+<div class="row"  *ngIf="(trackedTeams$ | async) as data">
   <div *ngFor="let team of data;" class="col-5 card cardspace" >
     <app-tracked-team-item [team]="team" (teamIdUntrack)="untrackTeam($event)" ></app-tracked-team-item>
   </div>

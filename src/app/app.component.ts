@@ -8,10 +8,5 @@ import { TeamsService } from './tracker/services/teams.service';
 })
 export class AppComponent {
   title = 'basketball-tracker';
-
-  constructor(public teamsService:TeamsService) {
-    teamsService.init();
-  }
-
 }
 

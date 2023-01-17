@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TeamsService } from './services/teams.service';
 
 @Component({
   selector: 'app-tracker',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./tracker.component.css']
 })
 export class TrackerComponent {
-
+  constructor(public teamsService:TeamsService) {
+    teamsService.init();
+  }
 }
