@@ -1,4 +1,4 @@
-<ng-container *ngIf="team$ | async as data">
+<ng-container *ngIf="team$ | async as data; else noData">
   <div class="col-5 card" >
     <div class="card-header" >
       {{data.fullname}} [{{data.abbreviation}}]
@@ -15,3 +15,6 @@
     </div>
   </div>
 </ng-container>
+<ng-template #noData>
+  Team not found in games results
+</ng-template>
