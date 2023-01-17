@@ -22,7 +22,7 @@ export class Team {
       }
     }
 
-    get  getGamedAvg() : Avg {
+    get  gamedAvg() : Avg {
       const avgResult = { score: 0, conceded: 0};
       if(this.games && this.games.length>0){
         const teamHomeGames = this.games.filter((t)=> t.homeTeam.id === this.id );

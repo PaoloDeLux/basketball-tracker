@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, concat, forkJoin, map, Observable, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -18,7 +18,7 @@ export class TeamsService {
 
   private URL = 'https://free-nba.p.rapidapi.com';
 
-  constructor(private http: HttpClient) {
+  constructor(private _http: HttpClient) {
     this._teams$ = new Observable();
     this._trackedTeams = new Array<Team>();
     this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
@@ -27,6 +27,7 @@ export class TeamsService {
 
   public init() : void {
     this.fetchTeams();
+    //this.retrieveTrackedTeams();
   }
 
   public getTeams(){
@@ -37,13 +38,44 @@ export class TeamsService {
     return this._trackedTeams$;
   }
 
+  // private retrieveTrackedTeams(){
+  //   const local =  localStorage.getItem('trackedTeams');
+  //   // Update all results on tracked teams storage
+  //   let localTracked : Team[] = [];
+  //   let initLocalTracked = new Array<Team>();
+  //   localTracked= local? (JSON.parse(local)) : null
+  //   let subscriptions= new Array<Observable<Game[]>>();
+  //   if(localTracked && localTracked.length>0){
+  //     localTracked.forEach((t)=>{
+  //       //Team Games
+  //       subscriptions.push(this.fetchTeamGames(t.id).pipe(
+  //         tap((games)=>{
+  //           let team = localTracked.find((f)=> f.id === t.id);
+  //           if(team){
+  //             // For a new avg calculation need a new instance
+  //             let newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city);
+  //             newTeam.games = games;
+  //             initLocalTracked.push(newTeam);
+  //           }
+  //         })
+  //       ));
+  //     })
+  //   }
+  //   forkJoin(subscriptions).subscribe(()=>{
+  //    this._trackedTeams = initLocalTracked;
+  //    this.setTrackedTeams([...initLocalTracked]);
+  //   });
+
+  // }
+
   private setTrackedTeams(trackedTeams : Team[]){
+    //localStorage.setItem('trackedTeams',JSON.stringify(trackedTeams));
     this._trackedTeams$.next(trackedTeams);
   }
 
 
   public fetchTeams() :void  {
-    this._teams$ = this.http.get<TeamsRequest>(this.URL + '/teams')
+    this._teams$ = this._http.get<TeamsRequest>(this.URL + '/teams')
     .pipe(
       map((res :TeamsRequest)=> {
         const teams =  res.data.map((team)=> {
@@ -68,7 +100,7 @@ export class TeamsService {
     queryParams = queryParams.append("page",0);
     queryParams = queryParams.append("per_page",12);
     queryParams = queryParams.append("team_ids[]",teamId);
-    return this.http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
+    return this._http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
     .pipe(
       map((res :GamesRequest)=> {
         const games =  res.data.map((game)=> {

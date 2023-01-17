@@ -9,7 +9,7 @@
       <div class="col-6">
         <p>Results of past 12 days</p>
         <app-games-strip [games]="team.games" [teamId]="team.id"></app-games-strip>
-        <ng-container *ngIf="team.getGamedAvg as avg" >
+        <ng-container *ngIf="team.gamedAvg as avg" >
           <p>Avg pts scored: <strong>{{avg.score}}</strong></p>
           <p>Avg pts conceded: <strong>{{avg.conceded}}</strong></p>
         </ng-container>
