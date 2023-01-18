@@ -14,8 +14,8 @@ export class Team {
     public fullname: string,
     public name: string,
     public city: string,
-    )
-    {
+    public trackingOrder?: number
+    )    {
       this.games = new Array<Game>();
       if(abbreviation){
         this.imgUrl = 'https://interstate21.com/nba-logos/'+abbreviation+'.png';

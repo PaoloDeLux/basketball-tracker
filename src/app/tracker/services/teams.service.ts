@@ -27,7 +27,7 @@ export class TeamsService {
 
   public init() : void {
     this.fetchTeams();
-    //this.retrieveTrackedTeams();
+    this.retrieveTrackedTeams();
   }
 
   public getTeams(){
@@ -38,38 +38,39 @@ export class TeamsService {
     return this._trackedTeams$;
   }
 
-  // private retrieveTrackedTeams(){
-  //   const local =  localStorage.getItem('trackedTeams');
-  //   // Update all results on tracked teams storage
-  //   let localTracked : Team[] = [];
-  //   let initLocalTracked = new Array<Team>();
-  //   localTracked= local? (JSON.parse(local)) : null
-  //   let subscriptions= new Array<Observable<Game[]>>();
-  //   if(localTracked && localTracked.length>0){
-  //     localTracked.forEach((t)=>{
-  //       //Team Games
-  //       subscriptions.push(this.fetchTeamGames(t.id).pipe(
-  //         tap((games)=>{
-  //           let team = localTracked.find((f)=> f.id === t.id);
-  //           if(team){
-  //             // For a new avg calculation need a new instance
-  //             let newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city);
-  //             newTeam.games = games;
-  //             initLocalTracked.push(newTeam);
-  //           }
-  //         })
-  //       ));
-  //     })
-  //   }
-  //   forkJoin(subscriptions).subscribe(()=>{
-  //    this._trackedTeams = initLocalTracked;
-  //    this.setTrackedTeams([...initLocalTracked]);
-  //   });
+  private retrieveTrackedTeams(){
+    const local =  localStorage.getItem('trackedTeams');
+    // Update all results on tracked teams storage
+    let localTracked : Team[] = [];
+    let initLocalTracked = new Array<Team>();
+    localTracked= local? (JSON.parse(local)) : null
+    let subscriptions= new Array<Observable<Game[]>>();
+    if(localTracked && localTracked.length>0){
+      localTracked.forEach((t)=>{
+        //Team Games
+        subscriptions.push(this.fetchTeamGames(t.id).pipe(
+          tap((games)=>{
+            let team = localTracked.find((f)=> f.id === t.id);
+            if(team){
+              // For a new avg calculation need a new instance
+              let newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city,team.trackingOrder);
+              newTeam.games = games;
+              initLocalTracked.push(newTeam);
+            }
+          })
+        ));
+      })
+    }
+    forkJoin(subscriptions).subscribe(()=>{
+      debugger
+     this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
+     this.setTrackedTeams([...this._trackedTeams]);
+    });
 
-  // }
+  }
 
   private setTrackedTeams(trackedTeams : Team[]){
-    //localStorage.setItem('trackedTeams',JSON.stringify(trackedTeams));
+    localStorage.setItem('trackedTeams',JSON.stringify(trackedTeams));
     this._trackedTeams$.next(trackedTeams);
   }
 
@@ -118,15 +119,21 @@ export class TeamsService {
         //Team Games
         this.fetchTeamGames(teamId).subscribe({
           next: (games) => {
-            team!.games = games;
-            // Check team is already tracked
-            if(!this._trackedTeams.find((t)=> t.id===+teamId)){
-              this._trackedTeams.push(team!);
-              this.setTrackedTeams(this._trackedTeams);
-              resolve();
+            if(team){
+              team.games = games;
+              // Check team is already tracked
+              if(!this._trackedTeams.find((t)=> t.id===+teamId)){
+                team.trackingOrder = this._trackedTeams.length;
+                this._trackedTeams.push(team);
+                this.setTrackedTeams(this._trackedTeams);
+                resolve();
+              }
+              else {
+                reject('The team is already tracked!');
+              }
             }
             else {
-              reject('The team is already tracked!');
+              reject('Team not yet available!');
             }
           },
           error: () => reject('Server side error!')
