@@ -27,7 +27,6 @@ export class ResultsComponent implements OnInit {
       map((params) => params['teamCode']),
       mergeMap((teamCode)=> {
         return this._teamsService.getTrackedTeams().pipe(
-          take(1),
           map((teams)=> {
             return teams.find((t)=> { return t.id === +teamCode!})
           })

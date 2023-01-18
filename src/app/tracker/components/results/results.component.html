@@ -12,6 +12,11 @@
     </div>
   </div>
 </ng-container>
+<!-- <ng-template #spinner>
+  <app-spinner ></app-spinner>
+</ng-template> -->
 <ng-template #noData>
-Team not found in games results
+  <div class="alert alert-danger" role="alert">
+    Team not found in games results, back to <a  [routerLink]="['/']">all team stats</a>
+  </div>
 </ng-template>

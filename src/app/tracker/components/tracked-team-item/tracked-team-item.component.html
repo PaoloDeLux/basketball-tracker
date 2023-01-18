@@ -1,4 +1,4 @@
-<ng-container *ngIf="team">
+<ng-container *ngIf="team; else noteam">
   <span class="pull-right clickable close-icon" (click)="onUntrack(team.id)" [id]="'remove'+team.abbreviation"><i class="fa fa-times iconspace close"></i></span>
   <app-tracked-team-title [team]="team"></app-tracked-team-title>
   <div class="card-body">
@@ -16,4 +16,11 @@
     <a [id]="'results'+team.abbreviation" [routerLink]="['/results/'+team.id]" class="btn btn-primary">See game results > ></a>
   </div>
 </ng-container>
+
+<ng-template #noteam>
+  <div class="alert alert-danger" role="alert" >
+    Team not found
+  </div>
+</ng-template>
+
 

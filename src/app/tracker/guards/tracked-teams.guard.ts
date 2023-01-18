@@ -19,11 +19,19 @@ export class TrackedTeamsGuard implements CanActivate  {
           }
           return true;
         }),
-        tap(response => {
+        map(response => {
           if (!response) {
-            alert('No tracked teams!')
-            this.router.navigateByUrl('/');
+            // Game results is subscribed to retrieve
+            this.teamsService.retrieveTrackedTeams().pipe(take(1)).subscribe((teams)=> {
+              if (!teams || teams.length ===0) {
+                alert('No tracked teams!');
+                this.router.navigateByUrl('/');
+                return false;
+              }
+              return true
+            })
           }
+          return true;
         })
       );
 

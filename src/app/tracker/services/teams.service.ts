@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, map, Observable, take, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -38,7 +38,7 @@ export class TeamsService {
     return this._trackedTeams$;
   }
 
-  private retrieveTrackedTeams(){
+  public retrieveTrackedTeams(): Observable<Team[]>{
     const local =  localStorage.getItem('trackedTeams');
     // Update all results on tracked teams storage
     let localTracked : Team[] = [];
@@ -61,14 +61,17 @@ export class TeamsService {
         ));
       })
     }
-    return forkJoin(subscriptions).pipe(tap(()=>{
-      this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
-      this.setTrackedTeams([...this._trackedTeams]);
+    return forkJoin(subscriptions).pipe(
+      take(1),
+      map(()=>{
+        this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
+        this._trackedTeams$.next([...this._trackedTeams]);
+        return this._trackedTeams;
       })
     );
   }
 
-  private setTrackedTeams(trackedTeams : Team[]){
+  private setTrackedTeams(trackedTeams : Team[]) : void {
     localStorage.setItem('trackedTeams',JSON.stringify(trackedTeams));
     this._trackedTeams$.next(trackedTeams);
   }
