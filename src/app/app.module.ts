@@ -8,11 +8,13 @@ import { ApiKeyInterceptor } from './core/interceptors/api-key.interceptor';
 import { ErrorCatchingInterceptor } from './core/interceptors/error-catching';
 import { TrackerModule } from './tracker/tracker.module';
 import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
+import { NotFoundComponent } from './core/components/not-found/not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
