@@ -1,9 +1,6 @@
 <ng-container *ngIf="team">
-  <span class="pull-right clickable close-icon" (click)="onUntrack(team.id)" [id]="'remove'+team.abbreviation"><i class="fa fa-times cardspace close"></i></span>
-  <div class="card-header" >
-    {{team.fullname}} [{{team.abbreviation}}]
-    <p class="subtitle">{{team.conference}} conference</p>
-  </div>
+  <span class="pull-right clickable close-icon" (click)="onUntrack(team.id)" [id]="'remove'+team.abbreviation"><i class="fa fa-times iconspace close"></i></span>
+  <app-tracked-team-title [team]="team"></app-tracked-team-title>
   <div class="card-body">
     <div class="row">
       <div class="col-6">

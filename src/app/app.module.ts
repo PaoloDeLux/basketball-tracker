@@ -7,10 +7,12 @@ import { AppComponent } from './app.component';
 import { ApiKeyInterceptor } from './core/interceptors/api-key.interceptor';
 import { ErrorCatchingInterceptor } from './core/interceptors/error-catching';
 import { TrackerModule } from './tracker/tracker.module';
+import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavBarComponent,
   ],
   imports: [
     BrowserModule,

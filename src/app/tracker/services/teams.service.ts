@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, concat, forkJoin, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, map, Observable, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -27,7 +27,7 @@ export class TeamsService {
 
   public init() : void {
     this.fetchTeams();
-    this.retrieveTrackedTeams();
+    this.retrieveTrackedTeams().subscribe();
   }
 
   public getTeams(){
@@ -42,7 +42,7 @@ export class TeamsService {
     const local =  localStorage.getItem('trackedTeams');
     // Update all results on tracked teams storage
     let localTracked : Team[] = [];
-    let initLocalTracked = new Array<Team>();
+    const initLocalTracked = new Array<Team>();
     localTracked= local? (JSON.parse(local)) : null
     let subscriptions= new Array<Observable<Game[]>>();
     if(localTracked && localTracked.length>0){
@@ -50,10 +50,10 @@ export class TeamsService {
         //Team Games
         subscriptions.push(this.fetchTeamGames(t.id).pipe(
           tap((games)=>{
-            let team = localTracked.find((f)=> f.id === t.id);
+            const team = localTracked.find((f)=> f.id === t.id);
             if(team){
               // For a new avg calculation need a new instance
-              let newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city,team.trackingOrder);
+              const newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city,team.trackingOrder);
               newTeam.games = games;
               initLocalTracked.push(newTeam);
             }
@@ -61,12 +61,11 @@ export class TeamsService {
         ));
       })
     }
-    forkJoin(subscriptions).subscribe(()=>{
-      debugger
-     this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
-     this.setTrackedTeams([...this._trackedTeams]);
-    });
-
+    return forkJoin(subscriptions).pipe(tap(()=>{
+      this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
+      this.setTrackedTeams([...this._trackedTeams]);
+      })
+    );
   }
 
   private setTrackedTeams(trackedTeams : Team[]){
@@ -94,7 +93,7 @@ export class TeamsService {
     let queryParams = new HttpParams();
     // Last 12 days results, not today
     for(let i = 1; i<13; i++){
-      let d = new Date();
+      const d = new Date();
       d.setDate(d.getDate() - i);
       queryParams = queryParams.append("dates[]",d.toISOString().slice(0, 10));
     }

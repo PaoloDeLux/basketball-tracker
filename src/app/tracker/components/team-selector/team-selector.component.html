@@ -1,23 +1,25 @@
-<form #myForm="ngForm">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <select class="form-select" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
-        [(ngModel)]="teamIdToTrack" name="team" >
-            <ng-container *ngIf="data.length===0; else options">
-              <option>No team available</option>
-            </ng-container>
-            <ng-template #options>
-              <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
-            </ng-template>
-        </select>
-        <ng-template #spinner>
-          <app-spinner ></app-spinner>
-        </ng-template>
+<nav class="navbar navbar-light bg-light bottomtm">
+  <form #myForm="ngForm">
+    <div class="container">
+      <div class="row" *ngIf="teams$ | async as data; else spinner">
+        <div class="col-sm">
+          <select class="form-select" id="teamInput"  required
+          [(ngModel)]="teamIdToTrack" name="team" >
+              <ng-container *ngIf="data.length===0; else options">
+                <option>No team available</option>
+              </ng-container>
+              <ng-template #options>
+                <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+              </ng-template>
+          </select>
+        </div>
+        <div class="col-sm" >
+          <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
+        </div>
       </div>
-      <div class="col-sm" >
-        <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary" (click)="trackTeam()">Track team</button>
-      </div>
+      <ng-template #spinner>
+        <app-spinner ></app-spinner>
+      </ng-template>
     </div>
-  </div>
-</form>
+  </form>
+</nav>
