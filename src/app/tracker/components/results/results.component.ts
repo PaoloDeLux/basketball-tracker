@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { map, mergeMap, Observable, take, } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { delay, map, mergeMap, Observable, take, } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -26,7 +26,9 @@ export class ResultsComponent implements OnInit {
     this.team$ = this._route.params.pipe(
       map((params) => params['teamCode']),
       mergeMap((teamCode)=> {
-        return this._teamsService.getTrackedTeams().pipe(
+        return this._teamsService.retrieveTrackedTeams().pipe(
+          take(1),
+          delay(100),
           map((teams)=> {
             return teams.find((t)=> { return t.id === +teamCode!})
           })

@@ -1,25 +1,35 @@
-<nav class="navbar navbar-light bg-light bottomtm">
-  <form #myForm="ngForm">
-    <div class="container">
-      <div class="row" *ngIf="teams$ | async as data; else spinner">
-        <div class="col-sm">
-          <select class="form-select" id="teamInput"  required
-          [(ngModel)]="teamIdToTrack" name="team" >
-              <ng-container *ngIf="data.length===0; else options">
-                <option>No team available</option>
-              </ng-container>
-              <ng-template #options>
-                <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
-              </ng-template>
-          </select>
+<nav class="navbar navbar-light bg-light bottomtm navh">
+<div *ngIf="teams$ | loading | async as data">
+  <ng-template [ngIf]="data.value">
+      <form #myForm="ngForm">
+        <div class="container">
+          <div class="row" *ngIf="teams$ | async as data">
+            <div class="col-sm">
+              <select class="form-select" id="teamInput"  required
+              [(ngModel)]="teamIdToTrack" name="team" >
+                  <ng-container *ngIf="data.length===0; else options">
+                    <option>No team available</option>
+                  </ng-container>
+                  <ng-template #options>
+                    <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+                  </ng-template>
+              </select>
+            </div>
+            <div class="col-sm" >
+              <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
+            </div>
+          </div>
         </div>
-        <div class="col-sm" >
-          <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
-        </div>
-      </div>
-      <ng-template #spinner>
-        <app-spinner ></app-spinner>
-      </ng-template>
+      </form>
+  </ng-template>
+  <ng-template [ngIf]="data.error">
+    <div class="alert alert-danger" role="alert">
+      Error in retrieving teams from Server
     </div>
-  </form>
+  </ng-template>
+  <ng-template [ngIf]="data.loading">
+    <app-spinner>
+    </app-spinner>
+  </ng-template>
+</div>
 </nav>

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, map, Observable, take, tap } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject, forkJoin, map, Observable, Subscription, take, tap } from 'rxjs';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
@@ -23,11 +23,6 @@ export class TeamsService {
     this._trackedTeams = new Array<Team>();
     this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
     this._teams = new Array<Team>();
-  }
-
-  public init() : void {
-    this.fetchTeams();
-    this.retrieveTrackedTeams().subscribe();
   }
 
   public getTeams(){
@@ -62,10 +57,11 @@ export class TeamsService {
       })
     }
     return forkJoin(subscriptions).pipe(
-      take(1),
       map(()=>{
         this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
+        // Update live tracked teams
         this._trackedTeams$.next([...this._trackedTeams]);
+        // Return of same list
         return this._trackedTeams;
       })
     );
@@ -158,6 +154,7 @@ export class TeamsService {
       }
     });
   }
+
 
 
 }

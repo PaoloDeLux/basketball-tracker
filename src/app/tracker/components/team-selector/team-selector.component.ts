@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize, Observable, tap } from 'rxjs';
+import { delay, finalize, Observable, tap } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -12,7 +12,6 @@ export class TeamSelectorComponent implements OnInit {
 
   public teams$: Observable<Team[]>;
   public teamIdToTrack! : number;
-  public spinner = true;
 
   constructor(private _teamsService: TeamsService){
     this.teams$ = new Observable();
@@ -21,8 +20,7 @@ export class TeamSelectorComponent implements OnInit {
   ngOnInit(): void {
     this.teams$ = this._teamsService.getTeams().pipe(
       // Default first team to track
-      tap((teams: Team[])=> { teams && teams.length>0? this.teamIdToTrack = teams[0].id : null }),
-      finalize(()=> { this.spinner = false})
+      tap((teams: Team[])=> { teams && teams.length>0? this.teamIdToTrack = teams[0].id : null })
     );
   }
 
