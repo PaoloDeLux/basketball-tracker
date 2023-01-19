@@ -16,7 +16,7 @@
               </select>
             </div>
             <div class="col-sm" >
-              <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
+              <button id="trackBtn" type="submit" [disabled]="!myForm.valid || trackingWait" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
             </div>
           </div>
         </div>

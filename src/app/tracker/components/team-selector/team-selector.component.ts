@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { delay, finalize, Observable, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -12,9 +12,11 @@ export class TeamSelectorComponent implements OnInit {
 
   public teams$: Observable<Team[]>;
   public teamIdToTrack! : number;
+  public trackingWait : boolean;
 
   constructor(private _teamsService: TeamsService){
     this.teams$ = new Observable();
+    this.trackingWait = false;
   }
 
   ngOnInit(): void {
@@ -25,12 +27,15 @@ export class TeamSelectorComponent implements OnInit {
   }
 
   public trackTeam(){
+    this.trackingWait = true;
     this._teamsService.trackTeam(this.teamIdToTrack)
     .then(() => {
       // Successfully added
+      this.trackingWait = false;
     })
     .catch((err) => {
       alert(err);
+      this.trackingWait = false;
     });
   }
 
