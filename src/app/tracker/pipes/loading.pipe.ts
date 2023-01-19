@@ -7,19 +7,20 @@ export interface Obs<T> {
   value?: T;
   error?: string;
 }
+
 const defaultError = 'Error occurred';
 
 @Pipe({
   name: 'loading',
 })
 export class LoadingPipe implements PipeTransform {
-  transform<T = any>(val: Observable<T>): Observable<Obs<T>> {
+  transform<T>(val: Observable<T>): Observable<Obs<T>> {
       return val.pipe(
-          map((value: any) => {
+          map((value) => {
               return {
-                  loading: value.type === 'start',
-                  error: value.type === 'error' ? defaultError : '',
-                  value: value.type ? value.value : value,
+                  loading: value === 'start',
+                  error: value === undefined ? defaultError : '',
+                  value: value
               };
           }),
           startWith({ loading: true }),

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -16,7 +16,7 @@ export class TrackedTeamsListComponent {
   }
 
   ngOnInit(): void {
-    this.trackedTeams$ = this._teamsService.getTrackedTeams();
+    this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(delay(300));
   }
 
   public untrackTeam(teamId: number){
