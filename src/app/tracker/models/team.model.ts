@@ -1,3 +1,4 @@
+import { environment } from "src/app/environments/environment";
 import { Avg } from "./avg.interface";
 import { Game } from "./game.model";
 
@@ -18,7 +19,7 @@ export class Team {
     )    {
       this.games = new Array<Game>();
       if(abbreviation){
-        this.imgUrl = 'https://interstate21.com/nba-logos/'+abbreviation+'.png';
+        this.imgUrl = environment.apiLogos+abbreviation+'.png';
       }
     }
 

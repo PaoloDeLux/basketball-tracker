@@ -1,10 +1,12 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, forkJoin, map, Observable, Subscription, take, tap } from 'rxjs';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, forkJoin, map, Observable, tap } from 'rxjs';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
 import { GamesRequest } from '../models/games-request.interface';
 import { Game } from '../models/game.model';
+import { environment } from 'src/app/environments/environment';
+import { DataService } from 'src/app/core/services/data-service';
+import { HttpParams } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +18,7 @@ export class TeamsService {
   private _trackedTeams$: BehaviorSubject<Team[]>;
   private _trackedTeams: Array<Team>;
 
-  private URL = 'https://free-nba.p.rapidapi.com';
-
-  constructor(private _http: HttpClient) {
+  constructor( private _dataService: DataService) {
     this._teams$ = new Observable();
     this._trackedTeams = new Array<Team>();
     this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
@@ -74,7 +74,7 @@ export class TeamsService {
 
 
   public fetchTeams() :void  {
-    this._teams$ = this._http.get<TeamsRequest>(this.URL + '/teams')
+    this._teams$ = this._dataService.fetch<TeamsRequest>(environment.apiUrl + '/teams')
     .pipe(
       map((res :TeamsRequest)=> {
         const teams =  res.data.map((team)=> {
@@ -99,7 +99,7 @@ export class TeamsService {
     queryParams = queryParams.append("page",0);
     queryParams = queryParams.append("per_page",12);
     queryParams = queryParams.append("team_ids[]",teamId);
-    return this._http.get<GamesRequest>(this.URL+ '/games',{params:queryParams})
+    return this._dataService.fetch<GamesRequest>(environment.apiUrl+ '/games',queryParams)
     .pipe(
       map((res :GamesRequest)=> {
         const games =  res.data.map((game)=> {
