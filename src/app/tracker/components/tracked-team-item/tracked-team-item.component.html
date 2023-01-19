@@ -1,5 +1,5 @@
 <ng-container *ngIf="team; else noteam">
-  <span class="pull-right clickable close-icon" (click)="onUntrack(team.id)" [id]="'remove'+team.abbreviation"><i class="fa fa-times iconspace close"></i></span>
+  <span class="pull-right clickable close-icon"><i (click)="onUntrack(team.id)" [attr.id]="'remove'+team.abbreviation" class="fa fa-times iconspace close"></i></span>
   <app-tracked-team-title [team]="team"></app-tracked-team-title>
   <div class="card-body">
     <div class="row">
@@ -13,7 +13,7 @@
       </div>
       <div class="col-6"><img *ngIf="team.imgUrl" [src]="team.imgUrl" class="imgSize" /></div>
     </div>
-    <a [id]="'results'+team.abbreviation" [routerLink]="['/results/'+team.id]" class="btn btn-primary">See game results > ></a>
+    <a [attr.id]="'results'+team.abbreviation" [routerLink]="['/results/'+team.id]" class="btn btn-primary">See game results > ></a>
   </div>
 </ng-container>
 
