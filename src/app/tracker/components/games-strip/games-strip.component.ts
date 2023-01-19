@@ -3,8 +3,7 @@ import { Game } from '../../models/game.model';
 
 @Component({
   selector: 'app-games-strip',
-  templateUrl: './games-strip.component.html',
-  styleUrls: ['./games-strip.component.css']
+  templateUrl: './games-strip.component.html'
 })
 export class GamesStripComponent {
 

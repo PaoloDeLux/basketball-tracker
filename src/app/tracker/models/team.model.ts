@@ -1,3 +1,5 @@
+import { environment } from "src/app/environments/environment";
+import { Avg } from "./avg.interface";
 import { Game } from "./game.model";
 
 export class Team {
@@ -13,16 +15,16 @@ export class Team {
     public fullname: string,
     public name: string,
     public city: string,
-    )
-    {
+    public trackingOrder?: number
+    )    {
       this.games = new Array<Game>();
       if(abbreviation){
-        this.imgUrl = 'https://interstate21.com/nba-logos/'+abbreviation+'.png';
+        this.imgUrl = environment.apiLogos+abbreviation+'.png';
       }
     }
 
-    get  getGamedAvg() : {score: number, conceded: number }{
-      let avgResult = { score: 0, conceded: 0};
+    get  gamedAvg() : Avg {
+      const avgResult = { score: 0, conceded: 0};
       if(this.games && this.games.length>0){
         const teamHomeGames = this.games.filter((t)=> t.homeTeam.id === this.id );
         const teamVisitorGames = this.games.filter((t)=>  t.visitorTeam.id === this.id );

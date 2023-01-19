@@ -1,5 +1,18 @@
-<div class="row"  *ngIf="(trackedTeams$ | async) as data">
-  <div *ngFor="let team of data;" class="col-5 card cardspace" >
-    <app-tracked-team-item [team]="team" (teamIdUntrack)="untrackTeam($event)" ></app-tracked-team-item>
+<div class="container">
+  <div class="row" *ngIf="trackedTeams$ | loading | async as data">
+    <ng-template [ngIf]="data.value">
+      <div *ngFor="let team of data.value" class="col-6 card" >
+        <app-tracked-team-item [team]="team" (teamIdUntrack)="untrackTeam($event)" ></app-tracked-team-item>
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="data.error">
+      <div class="alert alert-danger" role="alert">
+        Error in retrieving tracked teams from Storage
+      </div>
+    </ng-template>
+    <ng-template [ngIf]="data.loading">
+      <app-spinner>
+      </app-spinner>
+    </ng-template>
   </div>
 </div>

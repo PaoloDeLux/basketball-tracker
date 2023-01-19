@@ -1,18 +1,35 @@
-<form #myForm="ngForm">
-  <div class="container">
-    <div class="row">
-      <div class="col-sm">
-        <select class="form-select" id="teamInput" *ngIf="teams$ | async as data; else spinner" required
-        [(ngModel)]="teamIdToTrack" name="team" >
-            <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
-        </select>
-        <ng-template #spinner>
-          <app-spinner ></app-spinner>
-        </ng-template>
-      </div>
-      <div class="col-sm" >
-        <button id="trackBtn" type="submit" [disabled]="!myForm.valid" class="btn btn-primary" (click)="trackTeam()">Track team</button>
-      </div>
+<nav class="navbar navbar-light bg-light bottomtm navh">
+<div *ngIf="teams$ | loading | async as data">
+  <ng-template [ngIf]="data.value">
+      <form #myForm="ngForm">
+        <div class="container">
+          <div class="row" *ngIf="teams$ | async as data">
+            <div class="col-sm">
+              <select class="form-select" id="teamInput"  required
+              [(ngModel)]="teamIdToTrack" name="team" >
+                  <ng-container *ngIf="data.length===0; else options">
+                    <option>No team available</option>
+                  </ng-container>
+                  <ng-template #options>
+                    <option *ngFor="let team of data; let i = index" value="{{team.id}}">{{team.fullname}}</option>
+                  </ng-template>
+              </select>
+            </div>
+            <div class="col-sm" >
+              <button id="trackBtn" type="submit" [disabled]="!myForm.valid || trackingWait" class="btn btn-primary fixw" (click)="trackTeam()">Track team</button>
+            </div>
+          </div>
+        </div>
+      </form>
+  </ng-template>
+  <ng-template [ngIf]="data.error">
+    <div class="alert alert-danger" role="alert">
+      Error in retrieving teams from Server
     </div>
-  </div>
-</form>
+  </ng-template>
+  <ng-template [ngIf]="data.loading">
+    <app-spinner>
+    </app-spinner>
+  </ng-template>
+</div>
+</nav>

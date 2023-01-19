@@ -11,6 +11,8 @@ import { WinnerLoserTeamDirective } from './directives/winner-loser-team.directi
 import { GamesStripComponent } from './components/games-strip/games-strip.component';
 import { ResultsComponent } from './components/results/results.component';
 import { ResultItemComponent } from './components/result-item/result-item.component';
+import { TrackedTeamTitleComponent } from './components/tracked-team-title/tracked-team-title.component';
+import { LoadingPipe } from './pipes/loading.pipe';
 
 
 @NgModule({
@@ -23,7 +25,9 @@ import { ResultItemComponent } from './components/result-item/result-item.compon
     GamesStripComponent,
     WinnerLoserTeamDirective,
     ResultsComponent,
-    ResultItemComponent
+    ResultItemComponent,
+    TrackedTeamTitleComponent,
+    LoadingPipe
   ],
   imports: [
     CommonModule,

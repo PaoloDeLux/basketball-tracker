@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { delay, Observable } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -11,16 +11,22 @@ import { TeamsService } from '../../services/teams.service';
 export class TrackedTeamsListComponent {
   public trackedTeams$: Observable<Team[]>;
 
-  constructor(private teamsService: TeamsService){
+  constructor(private _teamsService: TeamsService){
     this.trackedTeams$ = new Observable();
   }
 
   ngOnInit(): void {
-    this.trackedTeams$ = this.teamsService.getTrackedTeams();
+    this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(delay(300));
   }
 
   public untrackTeam(teamId: number){
-    this.teamsService.untrackTeam(teamId);
+    this._teamsService.untrackTeam(teamId)
+    .then(() => {
+      // Successfully added
+    })
+    .catch((err) => {
+      alert(err);
+    });
   }
 
 }
