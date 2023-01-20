@@ -15,7 +15,7 @@
     </ng-template>
     <ng-template [ngIf]="data.error">
       <div class="alert alert-danger" role="alert">
-        Team not found in games results, back to <a  [routerLink]="['/']">all team stats</a>
+        Team not found in games results, back to <a  id="backBtn" [routerLink]="['/']">all team stats</a>
       </div>
     </ng-template>
     <ng-template [ngIf]="data.loading">
