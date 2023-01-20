@@ -3,8 +3,7 @@ import { Team } from '../../models/team.model';
 
 @Component({
   selector: 'app-tracked-team-title',
-  templateUrl: './tracked-team-title.component.html',
-  styleUrls: ['./tracked-team-title.component.css']
+  templateUrl: './tracked-team-title.component.html'
 })
 export class TrackedTeamTitleComponent {
 

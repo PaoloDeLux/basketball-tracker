@@ -5,10 +5,10 @@ import { TeamsService } from '../../services/teams.service';
 
 @Component({
   selector: 'app-tracked-teams-list',
-  templateUrl: './tracked-teams-list.component.html',
-  styleUrls: ['./tracked-teams-list.component.css']
+  templateUrl: './tracked-teams-list.component.html'
 })
 export class TrackedTeamsListComponent {
+
   public trackedTeams$: Observable<Team[]>;
 
   constructor(private _teamsService: TeamsService){
@@ -19,10 +19,10 @@ export class TrackedTeamsListComponent {
     this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(delay(300));
   }
 
-  public untrackTeam(teamId: number){
+  public untrackTeam(teamId: number): void{
     this._teamsService.untrackTeam(teamId)
     .then(() => {
-      // Successfully added
+      // Successfully untracked
     })
     .catch((err) => {
       alert(err);

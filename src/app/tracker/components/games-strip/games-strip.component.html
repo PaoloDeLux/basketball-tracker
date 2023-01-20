@@ -1,6 +1,12 @@
-<div *ngIf="games && teamId">
-  <ng-container *ngFor="let game of games">
-  <div appWinnerLoserTeam [winner]="game.winnerTeamId===teamId">{{ game.winnerTeamId===teamId? 'W' : 'L' }}</div>
+<ng-container  *ngIf="games && teamId; else nogames">
+  <div>
+    <ng-container *ngFor="let game of games">
+    <div appWinnerLoserTeam [winner]="game.winnerTeamId===teamId">{{ game.winnerTeamId===teamId? 'W' : 'L' }}</div>
+  </ng-container>
+  </div>
 </ng-container>
-</div>
+<ng-template #nogames>
+  No games available
+</ng-template>
+
 

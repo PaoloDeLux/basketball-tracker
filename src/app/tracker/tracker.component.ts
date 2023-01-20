@@ -4,8 +4,7 @@ import { TeamsService } from './services/teams.service';
 
 @Component({
   selector: 'app-tracker',
-  templateUrl: './tracker.component.html',
-  styleUrls: ['./tracker.component.css']
+  templateUrl: './tracker.component.html'
 })
 export class TrackerComponent  implements OnInit, OnDestroy {
   private _trackedTeamsSubscription: Subscription;

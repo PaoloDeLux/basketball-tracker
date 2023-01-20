@@ -26,7 +26,7 @@ export class TeamSelectorComponent implements OnInit {
     );
   }
 
-  public trackTeam(){
+  public trackTeam(): void{
     this.trackingWait = true;
     this._teamsService.trackTeam(this.teamIdToTrack)
     .then(() => {

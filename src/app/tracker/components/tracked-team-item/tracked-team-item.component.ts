@@ -12,7 +12,7 @@ export class TrackedTeamItemComponent  {
     @Input() team: Team | undefined;
     @Output() teamIdUntrack = new EventEmitter<number>();
 
-    onUntrack(teamId: number){
+    onUntrack(teamId: number): void{
       this.teamIdUntrack.emit(+teamId);
     }
 

@@ -9,7 +9,6 @@ import { ErrorCatchingInterceptor } from './core/interceptors/error-catching';
 import { TrackerModule } from './tracker/tracker.module';
 import { NavBarComponent } from './core/components/nav-bar/nav-bar.component';
 import { NotFoundComponent } from './core/components/not-found/not-found.component';
-import { LoadingPipe } from './tracker/pipes/loading.pipe';
 
 @NgModule({
   declarations: [

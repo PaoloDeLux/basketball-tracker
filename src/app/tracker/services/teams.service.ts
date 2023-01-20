@@ -18,11 +18,14 @@ export class TeamsService {
   private _trackedTeams$: BehaviorSubject<Team[]>;
   private _trackedTeams: Array<Team>;
 
+  private _dayResults: number;
+
   constructor( private _dataService: DataService) {
     this._teams$ = new Observable();
     this._trackedTeams = new Array<Team>();
     this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
     this._teams = new Array<Team>();
+    this._dayResults = 12;
   }
 
   public getTeams(){
@@ -43,12 +46,13 @@ export class TeamsService {
     if(localTracked && localTracked.length>0){
       localTracked.forEach((t)=>{
         //Team Games
-        subscriptions.push(this.fetchTeamGames(t.id).pipe(
+        subscriptions.push(this.fetchTeamGames(t.id,this._dayResults).pipe(
           tap((games)=>{
             const team = localTracked.find((f)=> f.id === t.id);
             if(team){
               // For a new avg calculation need a new instance
-              const newTeam = new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city,team.trackingOrder);
+              const newTeam =  new Team(team.id,team.abbreviation,team.conference,team.division,team.fullname,team.name,team.city,team.trackingOrder);
+              // Updated games
               newTeam.games = games;
               initLocalTracked.push(newTeam);
             }
@@ -88,16 +92,16 @@ export class TeamsService {
     )
   }
 
-  public fetchTeamGames(teamId: number) : Observable<Game[]>  {
+  public fetchTeamGames(teamId: number,days: number) : Observable<Game[]>  {
     let queryParams = new HttpParams();
     // Last 12 days results, not today
-    for(let i = 1; i<13; i++){
+    for(let i = 1; i<(days+1); i++){
       const d = new Date();
       d.setDate(d.getDate() - i);
       queryParams = queryParams.append("dates[]",d.toISOString().slice(0, 10));
     }
     queryParams = queryParams.append("page",0);
-    queryParams = queryParams.append("per_page",12);
+    queryParams = queryParams.append("per_page",days);
     queryParams = queryParams.append("team_ids[]",teamId);
     return this._dataService.fetch<GamesRequest>(environment.apiUrl+ '/games',queryParams)
     .pipe(
@@ -115,7 +119,7 @@ export class TeamsService {
       const team = this._teams.find((team)=> team.id === +teamId);
       if (team){
         //Team Games
-        this.fetchTeamGames(teamId).subscribe({
+        this.fetchTeamGames(teamId,this._dayResults).subscribe({
           next: (games) => {
             if(team){
               team.games = games;

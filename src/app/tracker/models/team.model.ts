@@ -16,7 +16,8 @@ export class Team {
     public name: string,
     public city: string,
     public trackingOrder?: number
-    )    {
+    )
+    {
       this.games = new Array<Game>();
       if(abbreviation){
         this.imgUrl = environment.apiLogos+abbreviation+'.png';

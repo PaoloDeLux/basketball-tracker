@@ -6,10 +6,13 @@
       <div class="col-6">
         <p>Results of past 12 days</p>
         <app-games-strip [games]="team.games" [teamId]="team.id"></app-games-strip>
-        <ng-container *ngIf="team.gamedAvg as avg" >
+        <ng-container *ngIf="team.gamedAvg as avg; else noavg" >
           <p>Avg pts scored: <strong>{{avg.score}}</strong></p>
           <p>Avg pts conceded: <strong>{{avg.conceded}}</strong></p>
         </ng-container>
+        <ng-template #noavg>
+          <p>No Avg stat available</p>
+        </ng-template>
       </div>
       <div class="col-6"><img *ngIf="team.imgUrl" [src]="team.imgUrl" class="imgSize" /></div>
     </div>
