@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, forkJoin, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, map, Observable, of, tap } from 'rxjs';
 import { Team } from '../models/team.model';
 import { TeamsRequest } from '../models/teams-request.interface';
 import { GamesRequest } from '../models/games-request.interface';
@@ -13,7 +13,7 @@ import { HttpParams } from '@angular/common/http';
 })
 export class TeamsService {
 
-  private _teams$: Observable<Team[]>;
+  private _teams$: BehaviorSubject<Team[]>;
   private _teams: Array<Team>;
   private _trackedTeams$: BehaviorSubject<Team[]>;
   private _trackedTeams: Array<Team>;
@@ -21,7 +21,7 @@ export class TeamsService {
   private _dayResults: number;
 
   constructor( private _dataService: DataService) {
-    this._teams$ = new Observable();
+    this._teams$ = new BehaviorSubject<Team[]>([]);
     this._trackedTeams = new Array<Team>();
     this._trackedTeams$ = new BehaviorSubject(this._trackedTeams);
     this._teams = new Array<Team>();
@@ -60,15 +60,19 @@ export class TeamsService {
         ));
       })
     }
-    return forkJoin(subscriptions).pipe(
-      map(()=>{
-        this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
-        // Update live tracked teams
-        this._trackedTeams$.next([...this._trackedTeams]);
-        // Return of same list
-        return this._trackedTeams;
-      })
-    );
+    if(subscriptions.length>0){
+      return forkJoin(subscriptions).pipe(
+        map(()=>{
+          this._trackedTeams = initLocalTracked.sort((a, b) => (a.trackingOrder! > b.trackingOrder!) ? 1 : -1)
+          // Update live tracked teams
+          this._trackedTeams$.next([...this._trackedTeams]);
+          // Return of same list
+          return this._trackedTeams;
+        })
+      );
+    }
+    this._trackedTeams$.next([...this._trackedTeams]);
+    return of([]);
   }
 
   private setTrackedTeams(trackedTeams : Team[]) : void {
@@ -77,8 +81,8 @@ export class TeamsService {
   }
 
 
-  public fetchTeams() :void  {
-    this._teams$ = this._dataService.fetch<TeamsRequest>(environment.apiUrl + '/teams')
+  public fetchTeams() : Observable<Team[]>  {
+    return this._dataService.fetch<TeamsRequest>(environment.apiUrl + '/teams')
     .pipe(
       map((res :TeamsRequest)=> {
         const teams =  res.data.map((team)=> {
@@ -88,6 +92,7 @@ export class TeamsService {
       }),
       tap((res)=> {
         this._teams =res;
+        this._teams$.next(res);
       })
     )
   }

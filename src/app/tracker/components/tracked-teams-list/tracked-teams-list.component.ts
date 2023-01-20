@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { delay, Observable } from 'rxjs';
+import { delay, Observable, tap } from 'rxjs';
 import { Team } from '../../models/team.model';
 import { TeamsService } from '../../services/teams.service';
 
@@ -10,13 +10,20 @@ import { TeamsService } from '../../services/teams.service';
 export class TrackedTeamsListComponent {
 
   public trackedTeams$: Observable<Team[]>;
+  public noTrackedTeams : boolean;
 
   constructor(private _teamsService: TeamsService){
     this.trackedTeams$ = new Observable();
+    this.noTrackedTeams = false;
   }
 
   ngOnInit(): void {
-    this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(delay(300));
+    this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(
+      tap((teams)=> {
+          this.noTrackedTeams = teams.length===0? true : false;
+      }),
+      delay(700),
+);
   }
 
   public trackBy(index:number, el:any): number {
