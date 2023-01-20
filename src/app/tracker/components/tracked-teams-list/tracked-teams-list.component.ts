@@ -19,6 +19,10 @@ export class TrackedTeamsListComponent {
     this.trackedTeams$ = this._teamsService.getTrackedTeams().pipe(delay(300));
   }
 
+  public trackBy(index:number, el:any): number {
+    return el.id;
+  }
+
   public untrackTeam(teamId: number): void{
     this._teamsService.untrackTeam(teamId)
     .then(() => {
