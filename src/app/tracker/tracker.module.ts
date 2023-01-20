@@ -33,9 +33,6 @@ import { LoadingPipe } from './pipes/loading.pipe';
     CommonModule,
     FormsModule,
     TrackerRoutingModule
-  ],
-  exports: [
-    TrackerComponent
   ]
 })
 export class TrackerModule { }

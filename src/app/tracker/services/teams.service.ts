@@ -119,7 +119,7 @@ export class TeamsService {
     )
   }
 
-  public trackTeam(teamId: number) : Promise<void> {
+  public trackTeam(teamId: number) : Promise<void | string> {
     return new Promise((resolve, reject) => {
       const team = this._teams.find((team)=> team.id === +teamId);
       if (team){
@@ -151,7 +151,7 @@ export class TeamsService {
     });
   }
 
-  public untrackTeam(teamId: number) : Promise<void> {
+  public untrackTeam(teamId: number) : Promise<void | string> {
     return new Promise((resolve, reject) => {
       const teamIndex = this._trackedTeams.findIndex((team)=> team.id === +teamId);
       if (teamIndex !== undefined){
