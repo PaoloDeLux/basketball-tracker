@@ -6,8 +6,7 @@ import { TeamsService } from '../../services/teams.service';
 
 @Component({
   selector: 'app-results',
-  templateUrl: './results.component.html',
-  styleUrls: ['./results.component.css']
+  templateUrl: './results.component.html'
 })
 export class ResultsComponent implements OnInit {
 
@@ -22,7 +21,7 @@ export class ResultsComponent implements OnInit {
     this.teamCode$ = new Observable();
    }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.team$ = this._route.params.pipe(
       map((params) => params['teamCode']),
       mergeMap((teamCode)=> {
@@ -30,7 +29,7 @@ export class ResultsComponent implements OnInit {
           take(1),
           delay(100),
           map((teams)=> {
-            return teams.find((t)=> { return t.id === +teamCode!})
+            return teams.find((t)=> { return t.id === +teamCode})
           })
         )
       })

@@ -1,9 +1,12 @@
 <div class="container">
   <div class="row" *ngIf="trackedTeams$ | loading | async as data">
     <ng-template [ngIf]="data.value">
-      <div *ngFor="let team of data.value" class="col-6 card" >
+      <div *ngFor="let team of data.value;  trackBy: trackBy" class="col-6 card" >
         <app-tracked-team-item [team]="team" (teamIdUntrack)="untrackTeam($event)" ></app-tracked-team-item>
       </div>
+      <ng-container *ngIf="noTrackedTeams">
+        <p>No tracked teams</p>
+      </ng-container>
     </ng-template>
     <ng-template [ngIf]="data.error">
       <div class="alert alert-danger" role="alert">

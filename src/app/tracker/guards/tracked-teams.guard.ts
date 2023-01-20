@@ -23,7 +23,6 @@ export class TrackedTeamsGuard implements CanActivate  {
           if (!response) {
             this.teamsService.retrieveTrackedTeams().pipe(take(1)).subscribe((teams)=> {
               if (!teams || teams.length ===0) {
-                alert('No tracked teams!');
                 this.router.navigateByUrl('/');
                 return false;
               }
