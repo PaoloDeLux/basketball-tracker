@@ -10,9 +10,6 @@ export class ErrorCatchingInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request)
             .pipe(
-                map(res => {
-                    return res
-                }),
                 catchError((error: HttpErrorResponse) => {
                     let errorStr = '';
                     if (error.error instanceof ErrorEvent) {

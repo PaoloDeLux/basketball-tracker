@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
-import { Observable } from 'rxjs';
-import { take, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { take, map, switchMap } from 'rxjs/operators';
 import { TeamsService } from 'src/app/tracker/services/teams.service';
 import { Team } from 'src/app/tracker/models/team.model';
 
@@ -19,17 +19,17 @@ export class TrackedTeamsGuard implements CanActivate  {
           }
           return true;
         }),
-        map(response => {
+        switchMap(response => {
           if (!response) {
             this.teamsService.retrieveTrackedTeams().pipe(take(1)).subscribe((teams)=> {
               if (!teams || teams.length ===0) {
                 this.router.navigateByUrl('/');
-                return false;
+                return of(false);
               }
-              return true;
+              return of(true);
             })
           }
-          return true;
+          return of(true);
         })
       );
 
